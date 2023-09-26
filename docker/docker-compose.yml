@@ -34,7 +34,7 @@ services:
     networks:
       - net-connectors
   minio:
-    image: 'minio/minio:latest'
+    image: minio/minio:latest
     container_name: minio
     ports:
       - "9000:9000"
@@ -44,6 +44,22 @@ services:
     env_file:
       - ./connectors/minio/minio.env
     command: server --console-address ":9001" /data
+    networks:
+      - net-connectors
+  custom_script:
+    build:
+      context: .
+      dockerfile: ./connectors/minio/Dockerfile
+    container_name: custom_script
+    volumes:
+      - ./connectors/minio/load_data.sh:/load_data.sh
+      - ../data:/data
+    depends_on:
+      - minio
+    entrypoint: /bin/sh
+    command: /load_data.sh
+    env_file:
+      - ./connectors/minio/minio.env
     networks:
       - net-connectors
 

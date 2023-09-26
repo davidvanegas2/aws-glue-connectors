@@ -5,6 +5,9 @@
 # Load the environment variables from the config.sh file
 source ./config.sh
 
+# Build the docker images
+docker-compose -f ./docker-compose.yml -f ./jupyter_lab/docker-compose.jupyter.yml build
+
 # Run the application
 docker-compose -f ./docker-compose.yml -f ./jupyter_lab/docker-compose.jupyter.yml up -d
 
