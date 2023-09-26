@@ -1,19 +1,44 @@
 services:
-  glue_jupyter_lab:
-    image: "amazon/aws-glue-libs:glue_libs_4.0.0_image_01"
-    container_name: glue_jupyter_lab
-    ports:
-      - "8888:8888"
-      - "4040:4040"
-      - "18080:18080"
-      - "8998:8998"
-    volumes:
-      - ~/.aws:/home/glue_user/.aws
-      - $JUPYTER_WORKSPACE_LOCATION:/home/glue_user/workspace/jupyter_workspace
+  opensearch-node1: # This is also the hostname of the container within the Docker network (i.e. https://opensearch-node1/)
+    image: "opensearchproject/opensearch:latest"
+    container_name: opensearch-node1
     environment:
-      - AWS_PROFILE=$PROFILE_NAME
-      - DISABLE_SSL=true
-    command: /home/glue_user/jupyter/jupyter_start.sh
-    tty: true
-    stdin_open: true
-    restart: "no"
+      - cluster.name=opensearch-cluster # This is the name of the cluster
+      - node.name=opensearch-node1 # This is the name of the node
+      - discovery.seed_hosts=opensearch-node1 # This is the list of nodes in the cluster
+      - cluster.initial_master_nodes=opensearch-node1 # Nodes eligible to serve as cluster manager
+      - bootstrap.memory_lock=true # Lock the memory on startup
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # Minimum and maximum Java heap size, recommend setting both to 50% of system RAM
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - opensearch-data1:/usr/share/opensearch/data # This is the data volume
+      - opensearch-logs1:/usr/share/opensearch/logs # This is the logs volume
+      - opensearch-config1:/usr/share/opensearch/config # This is the config volume
+    ports:
+      - "9200:9200" # This is the port OpenSearch listens on
+      - "9600:9600" # This is the port for the performance analyzer
+    networks:
+      - net-connectors # This is the name of the Docker network
+  opensearch-dashboards:
+    image: "opensearchproject/opensearch-dashboards:latest"
+    container_name: opensearch-dashboards
+    ports:
+      - "5601:5601" # This is the port OpenSearch Dashboards listens on
+    expose:
+      - "5601" # This is the port OpenSearch Dashboards listens on
+    environment:
+      - OPENSEARCH_HOSTS=["https://opensearch-node1:9200"] # This is the list of OpenSearch nodes
+    networks:
+      - net-connectors
+
+volumes:
+    opensearch-data1:
+    opensearch-logs1:
+    opensearch-config1:
+
+networks:
+    net-connectors:
+        driver: bridge
