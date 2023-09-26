@@ -6,7 +6,7 @@
 CURRENT_DIR=$(dirname "$0")
 
 # Define the variables
-export JUPYTER_WORKSPACE_LOCATION="$CURRENT_DIR/../connectors"
+export JUPYTER_WORKSPACE_LOCATION="$CURRENT_DIR/../../connectors"
 export PROFILE_NAME="default" # It needs to be changed to the name of the profile you want to use
 
 # Verify the values of the environment variables
