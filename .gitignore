@@ -160,4 +160,4 @@ cython_debug/
 .idea/
 
 # Minio data
-docker/connectors/minio/data/.minio.sys/**
+docker/connectors/minio/data/**
