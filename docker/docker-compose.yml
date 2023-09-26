@@ -33,6 +33,19 @@ services:
       - OPENSEARCH_HOSTS=["https://opensearch-node1:9200"] # This is the list of OpenSearch nodes
     networks:
       - net-connectors
+  minio:
+    image: 'minio/minio:latest'
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./connectors/minio/data:/data
+    env_file:
+      - ./connectors/minio/minio.env
+    command: server --console-address ":9001" /data
+    networks:
+      - net-connectors
 
 volumes:
     opensearch-data1:
