@@ -19,3 +19,6 @@ services:
     restart: "no"
     networks:
       - net-connectors
+    depends_on:
+      - opensearch-node1
+      - opensearch-dashboards
