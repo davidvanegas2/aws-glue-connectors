@@ -70,4 +70,3 @@ volumes:
 
 networks:
     net-connectors:
-        driver: bridge

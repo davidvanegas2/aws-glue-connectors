@@ -13,6 +13,10 @@ services:
     environment:
       - AWS_PROFILE=$PROFILE_NAME
       - DISABLE_SSL=true
+      - MINIO_BUCKET=dummy-bucket
+      - MINIO_PREFIX=dummy-data
+    env_file:
+      - ./connectors/minio/minio.env
     command: /home/glue_user/jupyter/jupyter_start.sh
     tty: true
     stdin_open: true
