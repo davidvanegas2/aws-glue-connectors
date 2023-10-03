@@ -10,6 +10,8 @@ services:
     volumes:
       - ~/.aws:/home/glue_user/.aws
       - $JUPYTER_WORKSPACE_LOCATION:/home/glue_user/workspace/jupyter_workspace
+#     TODO Create a script to download the jar file and place it in the right location
+      - ~/Downloads/elasticsearch-spark-30_2.12-8.10.2.jar:/home/glue_user/spark/jars/elasticsearch-spark-30_2.12-8.10.2.jar
     environment:
       - AWS_PROFILE=$PROFILE_NAME
       - DISABLE_SSL=true
